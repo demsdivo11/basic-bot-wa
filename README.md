@@ -1,4 +1,8 @@
 # SOURCE SIMPLE BOT WHATSAPP
+
+## DONT FORGET REMOVE HIDDEN FOLDER 
+- .wwebjs_auth and .wwebjs_cache
+- Agar tidak bug awalan
 ## HOW TO INSTALL AND USE?
 ```
 NPM INSTALL
@@ -6,8 +10,8 @@ NPM INSTALL
 ```
 
 ### THEN
-```NODE INDEX.JS
-
+```
+NODE INDEX.JS
 ```
 
 # FEATURE
