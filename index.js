@@ -35,6 +35,10 @@ if (fs.existsSync(antilinkFilePath)) {
     fs.writeFileSync(antilinkFilePath, JSON.stringify(antilinkData, null, 2));
 }
 
+function isPremium(userNumber) {
+    return premiumData[userNumber] && new Date(premiumData[userNumber].expires) > new Date();
+}
+
 // Objek untuk menyimpan command dan deskripsinya
 const commands = {
     ping: 'Balasan sederhana dengan "pong"',
@@ -48,7 +52,9 @@ const commands = {
     add: 'Menambahkan nomor ke grup. Hanya bisa digunakan oleh admin. Gunakan: add <nomer>',
     antilink: 'Mengatur fitur anti-link. Hanya bisa digunakan oleh admin. Gunakan: antilink <on/off>',
     del: 'Menghapus pesan dengan cara me-reply pesan yang ingin dihapus. Gunakan: del atau delete <reply>',
-    ai: 'Menggunakan API AI untuk mendapatkan respons. Gunakan: ai <chat/text>'
+    ai: 'Menggunakan API AI untuk mendapatkan respons. Gunakan: ai <chat/text>',
+     ffstalk: 'Mengambil data dari Free Fire Stalker. Gunakan: ffstalk <id>',
+    mlstalk: 'Mengambil data dari Mobile Legends Stalker. Gunakan: mlstalk <id> <zone>'
 };
 
 // Fungsi untuk mencatat log ke terminal
@@ -131,7 +137,52 @@ client.on('message', async message => {
                 message.reply(`Pesan telah dikirim ke ${groupCount} grup.`);
             }
         } 
+       else if (command === 'ffstalk') {
+        if (!isPremium(userNumber)) {
+            message.reply('Fitur ini hanya bisa digunakan oleh pengguna premium.');
+            return;
+        }
         
+        if (args.length !== 1) {
+            message.reply('Gunakan format: ' + prefix + 'ffstalk <id>');
+            return;
+        }
+    
+        const id = args[0];
+    
+        try {
+            const response = await axios.get(`https://api.yanzbotz.my.id/api/stalker/free-fire?id=${encodeURIComponent(id)}`);
+            const result = response.data;
+            message.reply(`Developer: ${result.developer}\nPesan: ${result.mess}`);
+        } catch (error) {
+            console.error('Error fetching Free Fire stalker data:', error);
+            message.reply('Terjadi kesalahan saat mendapatkan data.');
+        }
+    }
+    
+    // Command .mlstalk
+   else if (command === 'mlstalk') {
+        if (!isPremium(userNumber)) {
+            message.reply('Fitur ini hanya bisa digunakan oleh pengguna premium.');
+            return;
+        }
+    
+        if (args.length !== 2) {
+            message.reply('Gunakan format: ' + prefix + 'mlstalk <id> <zone>');
+            return;
+        }
+    
+        const [id, zone] = args;
+    
+        try {
+            const response = await axios.get(`https://api.yanzbotz.my.id/api/stalker/mobile-legends?id=${encodeURIComponent(id)}&zoneid=${encodeURIComponent(zone)}`);
+            const result = response.data;
+            message.reply(`Developer: ${result.developer}\nPesan: ${result.mess}`);
+        } catch (error) {
+            console.error('Error fetching Mobile Legends stalker data:', error);
+            message.reply('Terjadi kesalahan saat mendapatkan data.');
+        }
+    }
         else if (command === 'ai') {
             if (args.length === 0) {
                 message.reply('Gunakan format: ' + prefix + 'ai <chat/text>');
