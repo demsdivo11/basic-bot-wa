@@ -39,6 +39,7 @@ function isPremium(userNumber) {
     return premiumData[userNumber] && new Date(premiumData[userNumber].expires) > new Date();
 }
 
+
 // Objek untuk menyimpan command dan deskripsinya
 const commands = {
     ping: 'Balasan sederhana dengan "pong"',
@@ -137,33 +138,36 @@ client.on('message', async message => {
                 message.reply(`Pesan telah dikirim ke ${groupCount} grup.`);
             }
         } 
-       else if (command === 'ffstalk') {
-        if (!isPremium(userNumber)) {
-            message.reply('Fitur ini hanya bisa digunakan oleh pengguna premium.');
-            return;
+        else if (command === 'ffstalk') {
+            const userNumber = message.from.split('@')[0];
+        
+            if (!isPremium(userNumber)) {
+                message.reply('Anda bukan member premium, Anda tidak bisa menggunakan command ini.');
+                return;
+            }
+        
+            if (args.length !== 1) {
+                message.reply('Gunakan format: ' + prefix + 'ffstalk <id>');
+                return;
+            }
+        
+            const id = args[0];
+            try {
+                const response = await axios.get(`https://api.yanzbotz.my.id/api/stalker/free-fire?id=${encodeURIComponent(id)}`);
+                const result = response.data;
+                message.reply(`Hasil dari Free Fire Stalker:\n${JSON.stringify(result, null, 2)}`);
+            } catch (error) {
+                console.error('Error fetching FF Stalker data:', error);
+                message.reply('Terjadi kesalahan saat mendapatkan data Free Fire Stalker.');
+            }
         }
         
-        if (args.length !== 1) {
-            message.reply('Gunakan format: ' + prefix + 'ffstalk <id>');
-            return;
-        }
-    
-        const id = args[0];
-    
-        try {
-            const response = await axios.get(`https://api.yanzbotz.my.id/api/stalker/free-fire?id=${encodeURIComponent(id)}`);
-            const result = response.data;
-            message.reply(`Developer: ${result.developer}\nPesan: ${result.mess}`);
-        } catch (error) {
-            console.error('Error fetching Free Fire stalker data:', error);
-            message.reply('Terjadi kesalahan saat mendapatkan data.');
-        }
-    }
-    
     // Command .mlstalk
-   else if (command === 'mlstalk') {
+    else if (command === 'mlstalk') {
+        const userNumber = message.from.split('@')[0];
+    
         if (!isPremium(userNumber)) {
-            message.reply('Fitur ini hanya bisa digunakan oleh pengguna premium.');
+            message.reply('Anda bukan member premium, Anda tidak bisa menggunakan command ini.');
             return;
         }
     
@@ -173,16 +177,16 @@ client.on('message', async message => {
         }
     
         const [id, zone] = args;
-    
         try {
             const response = await axios.get(`https://api.yanzbotz.my.id/api/stalker/mobile-legends?id=${encodeURIComponent(id)}&zoneid=${encodeURIComponent(zone)}`);
             const result = response.data;
-            message.reply(`Developer: ${result.developer}\nPesan: ${result.mess}`);
+            message.reply(`Hasil dari Mobile Legends Stalker:\n${JSON.stringify(result, null, 2)}`);
         } catch (error) {
-            console.error('Error fetching Mobile Legends stalker data:', error);
-            message.reply('Terjadi kesalahan saat mendapatkan data.');
+            console.error('Error fetching ML Stalker data:', error);
+            message.reply('Terjadi kesalahan saat mendapatkan data Mobile Legends Stalker.');
         }
     }
+    
         else if (command === 'ai') {
             if (args.length === 0) {
                 message.reply('Gunakan format: ' + prefix + 'ai <chat/text>');
