@@ -2,6 +2,7 @@ const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 const fs = require('fs');
 const path = require('path');
+const axios = require('axios');
 
 // Membaca config.json
 const config = JSON.parse(fs.readFileSync('config.json', 'utf8'));
@@ -46,7 +47,8 @@ const commands = {
     kick: 'Menendang anggota dari grup. Hanya bisa digunakan oleh admin. Gunakan: kick <reply/tag>',
     add: 'Menambahkan nomor ke grup. Hanya bisa digunakan oleh admin. Gunakan: add <nomer>',
     antilink: 'Mengatur fitur anti-link. Hanya bisa digunakan oleh admin. Gunakan: antilink <on/off>',
-    del: 'Menghapus pesan dengan cara me-reply pesan yang ingin dihapus. Gunakan: del atau delete <reply>'
+    del: 'Menghapus pesan dengan cara me-reply pesan yang ingin dihapus. Gunakan: del atau delete <reply>',
+    ai: 'Menggunakan API AI untuk mendapatkan respons. Gunakan: ai <chat/text>'
 };
 
 // Fungsi untuk mencatat log ke terminal
@@ -128,7 +130,27 @@ client.on('message', async message => {
 
                 message.reply(`Pesan telah dikirim ke ${groupCount} grup.`);
             }
-        } else if (command === 'register') {
+        } 
+        
+        else if (command === 'ai') {
+            if (args.length === 0) {
+                message.reply('Gunakan format: ' + prefix + 'ai <chat/text>');
+                return;
+            }
+
+            const query = args.join(' ');
+
+            try {
+                const response = await axios.get(`https://api.yanzbotz.my.id/api/ai/chatgpt?query=${encodeURIComponent(query)}`);
+                const result = response.data.result;
+                message.reply(result);
+            } catch (error) {
+                console.error('Error fetching AI response:', error);
+                message.reply('Terjadi kesalahan saat mendapatkan respons AI.');
+            }
+        }
+        
+        else if (command === 'register') {
             if (args.length !== 1) {
                 message.reply('Gunakan format: ' + prefix + 'register <nama>.<umur>');
                 return;
@@ -249,37 +271,33 @@ client.on('message', async message => {
                 message.reply('Gagal meng-kick pengguna. Pastikan bot memiliki izin admin.');
             }
         } else if (command === 'add') {
-            const chat = await message.getChat();
-            if (!chat.isGroup) {
-                message.reply('Perintah ini hanya bisa digunakan di dalam grup.');
+            if (args.length !== 1) {
+                message.reply('Gunakan format: ' + prefix + 'add <nomer>');
                 return;
             }
 
-            const senderNumber = message.author ? message.author.split('@')[0] : message.from.split('@')[0];
-            const participants = await chat.participants;
-            const isAdmin = participants.find(participant => participant.id._serialized === message.author && participant.isAdmin);
-
-            if (!isAdmin) {
-                message.reply('Hanya admin yang dapat menggunakan perintah ini.');
-                return;
-            }
-
-            let targetNumber = null;
-            if (message.hasQuotedMsg) {
-                const quotedMsg = await message.getQuotedMessage();
-                targetNumber = quotedMsg.author || quotedMsg.from;
-            } else if (args.length === 1) {
-                targetNumber = args[0].replace(/[^0-9]/g, '') + '@c.us';
-            } else {
-                message.reply('Gunakan format: ' + prefix + 'add <nomer> atau reply pesan pengguna yang ingin ditambahkan.');
-                return;
-            }
+            const targetNumber = args[0].replace(/[^0-9]/g, '') + '@c.us';
 
             try {
+                const chat = await message.getChat();
+                if (!chat.isGroup) {
+                    message.reply('Perintah ini hanya bisa digunakan di dalam grup.');
+                    return;
+                }
+
+                const senderNumber = message.author ? message.author.split('@')[0] : message.from.split('@')[0];
+                const participants = await chat.participants;
+                const isAdmin = participants.find(participant => participant.id._serialized === message.author && participant.isAdmin);
+
+                if (!isAdmin) {
+                    message.reply('Hanya admin yang dapat menggunakan perintah ini.');
+                    return;
+                }
+
                 await chat.addParticipants([targetNumber]);
                 message.reply(`Pengguna dengan nomor ${targetNumber.split('@')[0]} telah ditambahkan ke grup.`);
             } catch (err) {
-                message.reply('Gagal menambahkan pengguna. Pastikan nomor yang dimasukkan benar.');
+                message.reply('Gagal menambahkan pengguna. Pastikan nomor yang dimasukkan benar dan bot memiliki izin admin.');
             }
         } else if (command === 'antilink') {
             const chat = await message.getChat();
