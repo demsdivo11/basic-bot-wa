@@ -138,67 +138,7 @@ client.on('message', async message => {
                 message.reply(`Pesan telah dikirim ke ${groupCount} grup.`);
             }
         } 
-        else if (command === 'ffstalk') {
-            const userNumber = message.from.split('@')[0];
-        
-            if (!isPremium(userNumber)) {
-                message.reply('Anda bukan member premium, Anda tidak bisa menggunakan command ini.');
-                return;
-            }
-        
-            if (args.length !== 1) {
-                message.reply('Gunakan format: ' + prefix + 'ffstalk <id>');
-                return;
-            }
-        
-            const id = args[0];
-            try {
-                const response = await axios.get(`https://api.yanzbotz.my.id/api/stalker/free-fire?id=${encodeURIComponent(id)}`);
-                const result = response.data;
-        
-                // Hanya menampilkan field 'mess' dari hasil API
-                if (result.mess) {
-                    message.reply(result.mess);
-                } else {
-                    message.reply('Tidak ada data yang diterima dari API.');
-                }
-            } catch (error) {
-                console.error('Error fetching FF Stalker data:', error);
-                message.reply('Terjadi kesalahan saat mendapatkan data Free Fire Stalker.');
-            }
-        }
-        
-        
-    // Command .mlstalk
-    else if (command === 'mlstalk') {
-        const userNumber = message.from.split('@')[0];
-    
-        if (!isPremium(userNumber)) {
-            message.reply('Anda bukan member premium, Anda tidak bisa menggunakan command ini.');
-            return;
-        }
-    
-        if (args.length !== 2) {
-            message.reply('Gunakan format: ' + prefix + 'mlstalk <id> <zone>');
-            return;
-        }
-    
-        const [id, zone] = args;
-        try {
-            const response = await axios.get(`https://api.yanzbotz.my.id/api/stalker/mobile-legends?id=${encodeURIComponent(id)}&zoneid=${encodeURIComponent(zone)}`);
-            const result = response.data;
-    
-            // Hanya menampilkan field 'mess' dari hasil API
-            if (result.mess) {
-                message.reply(result.mess);
-            } else {
-                message.reply('Tidak ada data yang diterima dari API.');
-            }
-        } catch (error) {
-            console.error('Error fetching ML Stalker data:', error);
-            message.reply('Terjadi kesalahan saat mendapatkan data Mobile Legends Stalker.');
-        }
-    }
+     
     
     
         else if (command === 'ai') {
