@@ -15,6 +15,6 @@ NPM INSTALL && NPM START
 ### CAN CHANGE THE PREFIX IN SOURCE
 
 
-NEED HELP?
-WHATSAPP: 6283111515287 (iDems)
-DISCORD: demsm.kom or demss.kom
+### NEED HELP?
+- WHATSAPP: 6283111515287 (iDems)
+- DISCORD: demsm.kom or demss.kom
