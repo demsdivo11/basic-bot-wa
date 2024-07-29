@@ -1,5 +1,6 @@
 # SOURCE SIMPLE BOT WHATSAPP
 ## NOT SUPPORT TERMUX/PANEL PTERODACYL/LINUX
+## ONLY SUPPOR WINDOWS, NEXT UPDATE I WILL FIX IT
 ## DONT FORGET REMOVE HIDDEN FOLDER 
 - .wwebjs_auth and .wwebjs_cache
 - Agar tidak bug awalan dan bisa memakai nomer whatsapp kalian
