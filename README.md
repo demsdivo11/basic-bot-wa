@@ -1,7 +1,17 @@
 # SOURCE SIMPLE BOT WHATSAPP
+## NOT SUPPORT TERMUX/PANEL PTERODACYL/LINUX
+## ONLY SUPPOR WINDOWS, NEXT UPDATE I WILL FIX IT
+## DONT FORGET REMOVE HIDDEN FOLDER 
+- .wwebjs_auth and .wwebjs_cache
+- Agar tidak bug awalan dan bisa memakai nomer whatsapp kalian
 ## HOW TO INSTALL AND USE?
 ```
-NPM INSTALL && NPM START
+NPM INSTALL
+```
+
+### THEN
+```
+NODE INDEX.JS
 ```
 
 # FEATURE
