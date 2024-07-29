@@ -155,12 +155,19 @@ client.on('message', async message => {
             try {
                 const response = await axios.get(`https://api.yanzbotz.my.id/api/stalker/free-fire?id=${encodeURIComponent(id)}`);
                 const result = response.data;
-                message.reply(`Hasil dari Free Fire Stalker:\n${JSON.stringify(result, null, 2)}`);
+        
+                // Hanya menampilkan field 'mess' dari hasil API
+                if (result.mess) {
+                    message.reply(result.mess);
+                } else {
+                    message.reply('Tidak ada data yang diterima dari API.');
+                }
             } catch (error) {
                 console.error('Error fetching FF Stalker data:', error);
                 message.reply('Terjadi kesalahan saat mendapatkan data Free Fire Stalker.');
             }
         }
+        
         
     // Command .mlstalk
     else if (command === 'mlstalk') {
@@ -180,12 +187,19 @@ client.on('message', async message => {
         try {
             const response = await axios.get(`https://api.yanzbotz.my.id/api/stalker/mobile-legends?id=${encodeURIComponent(id)}&zoneid=${encodeURIComponent(zone)}`);
             const result = response.data;
-            message.reply(`Hasil dari Mobile Legends Stalker:\n${JSON.stringify(result, null, 2)}`);
+    
+            // Hanya menampilkan field 'mess' dari hasil API
+            if (result.mess) {
+                message.reply(result.mess);
+            } else {
+                message.reply('Tidak ada data yang diterima dari API.');
+            }
         } catch (error) {
             console.error('Error fetching ML Stalker data:', error);
             message.reply('Terjadi kesalahan saat mendapatkan data Mobile Legends Stalker.');
         }
     }
+    
     
         else if (command === 'ai') {
             if (args.length === 0) {
