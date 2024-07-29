@@ -2,7 +2,7 @@
 
 ## DONT FORGET REMOVE HIDDEN FOLDER 
 - .wwebjs_auth and .wwebjs_cache
-- Agar tidak bug awalan
+- Agar tidak bug awalan dan bisa memakai nomer whatsapp kalian
 ## HOW TO INSTALL AND USE?
 ```
 NPM INSTALL
